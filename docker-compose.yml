@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kreyatik-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - kreyatik-network
+    depends_on:
+      - db
+      - redis
+
+  nginx:
+    image: nginx:1.21-alpine
+    container_name: kreyatik-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - kreyatik-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: kreyatik-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - kreyatik-mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - kreyatik-network
+
+  redis:
+    image: redis:alpine
+    container_name: kreyatik-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - kreyatik-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: kreyatik-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - kreyatik-network
+
+networks:
+  kreyatik-network:
+    driver: bridge
+
+volumes:
+  kreyatik-mysql-data:
+    driver: local 

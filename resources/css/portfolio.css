@@ -1,0 +1,87 @@
+:root {
+    --primary: #0099cc;
+    --accent: #ffd700;
+    --light: #f9f9f9;
+    --dark: #1e1e1e;
+}
+
+.portfolio-header {
+    background: linear-gradient(135deg, #0099CC, #00A86B);
+    color: white;
+    padding: 80px 20px 40px;
+    text-align: center;
+}
+
+.portfolio-header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.portfolio-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.portfolio-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 60px 20px;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.portfolio-item {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-5px);
+}
+
+.portfolio-item img,
+.portfolio-item video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.portfolio-item video {
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+}
+
+.portfolio-caption {
+    padding: 20px;
+    text-align: center;
+}
+
+.portfolio-caption h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+.portfolio-caption p {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+@media (max-width: 576px) {
+    .portfolio-header h1 {
+        font-size: 2rem;
+    }
+
+    .portfolio-header p {
+        font-size: 1rem;
+    }
+
+    .portfolio-item video {
+        height: auto;
+        aspect-ratio: auto;
+    }
+}

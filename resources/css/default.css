@@ -1,0 +1,234 @@
+@media (min-width: 1024px) {
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        color: #fff;
+        padding: 5px 0;
+    }
+}
+
+:root {
+    --primary: #0099cc;
+    --secondary: #ff6b6b;
+    --accent: #ffd700;
+    --dark: #1e1e1e;
+    --light: #f9f9f9;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f9f9f9;
+    color: #1E1E1E;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 12px 40px;
+    background: rgba(30, 30, 30, 0.3);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.6s ease-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+    height: 64px;
+}
+
+.navbar-nav {
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+@media (min-width: 1024px) {
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.navbar-nav .nav-item .nav-link {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: rgba(255, 215, 0, 0.9);
+    transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: rgba(0, 153, 204, 0.9);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.footer {
+    background: linear-gradient(135deg, #0099CC, #00A86B, #FFD700, #FF6B6B);
+    background-size: 400% 400%;
+    animation: gradientFooter 15s ease infinite;
+    color: #f9f9f9;
+    padding: 30px 20px 15px;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-col.branding {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.footer h5 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.footer p {
+    line-height: 1.6;
+    color: #ffff;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-links li {
+    margin: 0;
+}
+
+.footer-links a {
+    display: inline-block;
+    padding: 5px 10px;
+    color: #ffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #FFD700;
+}
+
+.footer-bottom {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+@keyframes gradientFooter {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .footer-col {
+        width: 100%;
+        padding: 0;
+    }
+
+    .footer h5 {
+        margin-bottom: 8px;
+    }
+
+    .footer p,
+    .footer-links li {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .footer {
+        padding: 40px 20px 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .footer {
+        animation: none !important;
+        background-position: center !important;
+    }
+}
+
+#success-message,
+#error-message {
+    display: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#success-message {
+    background-color: #4CAF50;
+}
+
+#error-message {
+    background-color: #f44336;
+}

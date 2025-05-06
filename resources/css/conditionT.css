@@ -1,0 +1,78 @@
+@media (max-width: 768px) {
+  .conditions h2 {
+    font-size: 2rem;
+  }
+
+  .condition-block {
+    padding: 20px;
+  }
+
+  .condition-block h3,
+  .condition-block h4 {
+    font-size: 1.3rem;
+  }
+
+  .conditions p {
+    font-size: 1rem;
+  }
+}
+
+section.conditions {
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    background: linear-gradient(135deg, #FDFCFB, #E2D1C3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .conditions .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .conditions h2 {
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    color: #0099CC;
+  }
+
+  .conditions p {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    color: #444;
+  }
+
+  .condition-block {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+  }
+
+  .condition-block:hover {
+    transform: translateY(-5px);
+  }
+
+  .condition-block h3,
+  .condition-block h4 {
+    color: #FF6B6B;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+
+  .condition-block ul {
+    padding-left: 20px;
+    list-style: disc;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  .condition-block ul li strong {
+    color: #00A86B;
+  }
+
+
+ 
