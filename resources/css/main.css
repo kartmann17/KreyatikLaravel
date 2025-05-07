@@ -286,7 +286,7 @@
     background-position: center;
     color: white;
     padding: 100px 0;
-    height: 100vh;
+    /* height: 100vh; */
 }
 
 .about-parallax-overlay {
