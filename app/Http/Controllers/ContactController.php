@@ -53,25 +53,41 @@ class ContactController extends Controller
 
             // Envoi de l'email
             Mail::to(config('mail.from.address'))->send(new ContactFormMail($validatedData));
-            
+
             // Si la requête est AJAX
             if ($request->ajax()) {
                 return response()->json(['success' => 'Votre message a été envoyé avec succès.']);
             }
-            
-            // Sinon, redirection avec message flash
+
+            // Déterminer si la requête vient de la page d'accueil ou de la page contact
+            $referer = $request->header('referer');
+
+            // Si la requête vient de la page d'accueil, rediriger vers la page d'accueil
+            if (str_contains($referer, url('/'))) {
+                return redirect('/')->with('success', 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.');
+            }
+
+            // Sinon, redirection vers la page contact avec message flash
             return redirect()->route('contact')->with('success', 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.');
         } catch (\Exception $e) {
             // Log l'erreur
             Log::error('Erreur lors de l\'envoi du message: ' . $e->getMessage());
-            
+
             // Si la requête est AJAX
             if ($request->ajax()) {
                 return response()->json(['error' => 'Une erreur est survenue lors de l\'envoi du message.'], 500);
             }
-            
+
+            // Déterminer si la requête vient de la page d'accueil ou de la page contact
+            $referer = $request->header('referer');
+
+            // Si la requête vient de la page d'accueil, rediriger vers la page d'accueil
+            if (str_contains($referer, url('/'))) {
+                return redirect('/')->with('error', 'Une erreur est survenue lors de l\'envoi du message.');
+            }
+
             // Sinon, redirection avec message d'erreur
             return redirect()->route('contact')->with('error', 'Une erreur est survenue lors de l\'envoi du message.');
         }
     }
-} 
+}

@@ -90,11 +90,11 @@
                                         <a href="{{ route('admin.contact-messages.show', $message->id) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        
-                                        <button type="button" 
-                                                class="btn btn-sm btn-danger delete-message" 
-                                                data-id="{{ $message->id }}" 
-                                                data-bs-toggle="modal" 
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-danger delete-message"
+                                                data-id="{{ $message->id }}"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#deleteModal">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -126,10 +126,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
                 <form id="delete-form" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
             </div>
         </div>
@@ -143,13 +143,19 @@
         // Gestion de la suppression
         const deleteButtons = document.querySelectorAll('.delete-message');
         const deleteForm = document.getElementById('delete-form');
-        
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
         deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const messageId = this.getAttribute('data-id');
                 deleteForm.action = "{{ url('admin/contact-messages') }}/" + messageId;
             });
         });
+
+        // Ajouter l'événement de clic sur le bouton de confirmation de suppression
+        confirmDeleteBtn.addEventListener('click', function() {
+            deleteForm.submit();
+        });
     });
 </script>
-@endsection 
+@endsection

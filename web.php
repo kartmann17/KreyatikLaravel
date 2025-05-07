@@ -52,7 +52,7 @@ Route::get('/CGV', function () {
 });
 
 //Page confidentialité
-Route::get('/confidentialité', function () {
+Route::get('/confidentialite', function () {
     return view('confidentialite.index');
 });
 
@@ -274,7 +274,6 @@ Route::middleware(['auth', 'role:admin,staff'])->prefix('admin')->group(function
         Route::put('/update', [SettingsController::class, 'updateAccount'])->name('update');
         Route::put('/seo', [SettingsController::class, 'updateSeo'])->name('seo');
         Route::put('/seo/page/{page}', [SettingsController::class, 'updatePageSeo'])->name('seo.page');
-        Route::put('/preferences', [SettingsController::class, 'updatePreferences'])->name('preferences');
     });
 
     /*

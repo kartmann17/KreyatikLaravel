@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'client_id',
+        'preferences',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'preferences' => 'json',
         ];
     }
 
@@ -88,7 +90,7 @@ class User extends Authenticatable
         // Utiliser une URL d'avatar générique de UI Avatars
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
     }
-    
+
     /**
      * Retourne la description pour AdminLTE
      */
@@ -96,7 +98,7 @@ class User extends Authenticatable
     {
         return ucfirst($this->role);
     }
-    
+
     /**
      * Retourne l'URL de profil pour AdminLTE
      */
@@ -108,7 +110,7 @@ class User extends Authenticatable
         } elseif ($this->isClient()) {
             return route('client.profile.index');
         }
-        
+
         return route('admin.profile.index');
     }
 }
