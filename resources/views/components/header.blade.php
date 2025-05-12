@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr" class="h-full">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {!! seo($SEOData ?? null) !!}
+    @if(isset($seoData))
+    <title>{{ $seoData->title }}</title>
+    <meta name="description" content="{{ $seoData->description }}">
+    <meta name="author" content="{{ $seoData->author }}">
+    <meta name="robots" content="{{ $seoData->robots }}">
+    <link rel="canonical" href="{{ $seoData->canonical_url }}" />
+    @endif
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,9 +20,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Macondo&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js']);
-    <title>{{ isset($title) ? $title . ' | ' . config('app.name') : config('app.name') }}</title>
 
 </head>
+
 <body class="h-full">
     <div class="site-wrapper">
         @include('components.nav')
@@ -24,4 +31,3 @@
             <!-- Content will be here -->
         </div>
     </div>
-

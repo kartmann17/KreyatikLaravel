@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use App\Models\User;
+use RalphJSmit\Laravel\SEO\Models\SEO;
+use Illuminate\Support\Str;
+use App\Models\GlobalSettings;
 
 class SettingsController extends Controller
 {
@@ -31,7 +34,32 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        return view('admin.settings');
+        $settings = GlobalSettings::getInstance();
+
+        // Récupérer les données SEO pour chaque page
+        $pagesSeo = [];
+        $validPages = ['home', 'contact', 'offres', 'client', 'portfolio'];
+
+        foreach ($validPages as $page) {
+            $url = match ($page) {
+                'home' => '/',
+                'offres' => '/NosOffres',
+                'contact' => '/Contact',
+                'client' => '/Client',
+                'portfolio' => '/Portfolio',
+                default => '/'
+            };
+
+            $pagesSeo[$page] = SEO::where('url', $url)
+                ->where('model_type', GlobalSettings::class)
+                ->where('model_id', $settings->id)
+                ->first();
+        }
+
+        return view('admin.settings', [
+            'settings' => $settings,
+            'pagesSeo' => $pagesSeo
+        ]);
     }
 
     /**
@@ -83,7 +111,7 @@ class SettingsController extends Controller
             'site_name' => 'required|string|max:255',
             'default_description' => 'nullable|string',
             'default_keywords' => 'nullable|string',
-            'default_image' => 'nullable|image:allow_svg|max:2048',
+            'default_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'locale' => 'required|string|in:fr_FR,en_US,en_GB',
             'social_facebook' => 'nullable|url',
             'social_twitter' => 'nullable|url',
@@ -96,22 +124,66 @@ class SettingsController extends Controller
             $this->updateEnvVariable('APP_NAME', '"' . $validated['site_name'] . '"');
 
             // Gérer l'upload de l'image par défaut
+            $imagePath = null;
             if ($request->hasFile('default_image')) {
-                $path = $request->file('default_image')->store('seo', 'public');
-                $this->updateSeoConfig('default_image', 'storage/' . $path);
+                // Supprimer l'ancienne image si elle existe
+                $settings = GlobalSettings::getInstance();
+                if ($settings->default_image && Storage::disk('public')->exists($settings->default_image)) {
+                    Storage::disk('public')->delete($settings->default_image);
+                }
+
+                // Stocker la nouvelle image
+                $imagePath = $request->file('default_image')->store('seo', 'public');
             }
 
-            // Mettre à jour les autres configurations SEO
-            $this->updateSeoConfig('default_description', $validated['default_description']);
-            $this->updateSeoConfig('default_keywords', $validated['default_keywords']);
-            $this->updateSeoConfig('locale', $validated['locale']);
-            $this->updateSeoConfig('social_facebook', $validated['social_facebook']);
-            $this->updateSeoConfig('social_twitter', $validated['social_twitter']);
-            $this->updateSeoConfig('social_instagram', $validated['social_instagram']);
-            $this->updateSeoConfig('social_linkedin', $validated['social_linkedin']);
+            // Mettre à jour ou créer les paramètres globaux
+            $settings = GlobalSettings::getInstance();
+            $settings->fill([
+                'site_name' => $validated['site_name'],
+                'default_description' => $validated['default_description'],
+                'default_keywords' => $validated['default_keywords'],
+                'default_image' => $imagePath ?? $settings->default_image,
+                'locale' => $validated['locale'],
+                'social_facebook' => $validated['social_facebook'],
+                'social_twitter' => $validated['social_twitter'],
+                'social_instagram' => $validated['social_instagram'],
+                'social_linkedin' => $validated['social_linkedin'],
+            ]);
+            $settings->save();
 
-            // Rafraîchir la configuration après la mise à jour
+            // Préparer les données SEO
+            $seoData = [
+                'title' => $validated['site_name'],
+                'description' => $validated['default_description'],
+                'keywords' => $validated['default_keywords'],
+                'image' => $imagePath ? asset('storage/' . $imagePath) : ($settings->default_image ? asset('storage/' . $settings->default_image) : null),
+                'locale' => $validated['locale'],
+                'site_name' => $validated['site_name'],
+                'author' => config('app.name'),
+                'robots' => 'index, follow',
+                'canonical_url' => url('/'),
+            ];
+
+            // Mettre à jour les métadonnées SEO
+            $seo = $settings->seo()->updateOrCreate(
+                ['url' => '/'],
+                $seoData
+            );
+
+            // Mettre à jour la configuration
+            config(['seo.site_name' => $validated['site_name']]);
+            config(['seo.default_description' => $validated['default_description']]);
+            config(['seo.default_keywords' => $validated['default_keywords']]);
+            config(['seo.default_image' => $imagePath ? asset('storage/' . $imagePath) : ($settings->default_image ? asset('storage/' . $settings->default_image) : null)]);
+            config(['seo.locale' => $validated['locale']]);
+            config(['seo.social_facebook' => $validated['social_facebook']]);
+            config(['seo.social_twitter' => $validated['social_twitter']]);
+            config(['seo.social_instagram' => $validated['social_instagram']]);
+            config(['seo.social_linkedin' => $validated['social_linkedin']]);
+
+            // Vider le cache de configuration
             Artisan::call('config:clear');
+            Artisan::call('cache:clear');
 
             return redirect()->route('admin.settings.index')->with('success', 'Les paramètres SEO ont été mis à jour avec succès.');
         } catch (\Exception $e) {
@@ -136,17 +208,30 @@ class SettingsController extends Controller
 
         try {
             // Vérifier que la page est valide
-            $validPages = ['home', 'contact', 'offres', 'client'];
+            $validPages = ['home', 'contact', 'offres', 'client', 'portfolio'];
             if (!in_array($page, $validPages)) {
                 return back()->withErrors(['error' => 'Page invalide.']);
             }
 
-            // Mettre à jour les configurations SEO pour la page spécifique
-            $this->updateSeoConfig("pages.{$page}.title", $validated['title']);
-            $this->updateSeoConfig("pages.{$page}.description", $validated['description']);
+            // Déterminer l'URL de la page
+            $url = match ($page) {
+                'home' => '/',
+                'offres' => '/NosOffres',
+                'contact' => '/Contact',
+                'client' => '/Client',
+                'portfolio' => '/Portfolio',
+                default => '/'
+            };
 
-            // Rafraîchir la configuration après la mise à jour
-            Artisan::call('config:clear');
+            // Mettre à jour les paramètres globaux avec les métadonnées de la page
+            $settings = GlobalSettings::getInstance();
+            $settings->seo()->updateOrCreate(
+                ['url' => $url],
+                [
+                    'title' => $validated['title'],
+                    'description' => $validated['description'],
+                ]
+            );
 
             return redirect()->route('admin.settings.index')->with('success', 'Les paramètres SEO de la page ont été mis à jour avec succès.');
         } catch (\Exception $e) {
@@ -185,58 +270,6 @@ class SettingsController extends Controller
     }
 
     /**
-     * Met à jour une configuration SEO dans le config/seo.php
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return void
-     */
-    private function updateSeoConfig($key, $value)
-    {
-        // Dans un environnement de production, il faudrait écrire physiquement dans le fichier
-        // Pour cette implémentation, on utilise la méthode qui met à jour la configuration en mémoire
-        Config::set("seo.{$key}", $value);
-
-        // En production, nous allons écrire directement dans le fichier de configuration
-        $this->writeConfigFile('seo', $key, $value);
-    }
-
-    /**
-     * Écrit une configuration dans un fichier de configuration
-     *
-     * @param  string  $file
-     * @param  string  $key
-     * @param  mixed   $value
-     * @return void
-     */
-    private function writeConfigFile($file, $key, $value)
-    {
-        $configPath = config_path("{$file}.php");
-
-        if (file_exists($configPath)) {
-            $config = include $configPath;
-
-            // Mettre à jour la valeur en suivant le chemin de la clé (avec notation par points)
-            $keys = explode('.', $key);
-            $lastKey = array_pop($keys);
-            $configRef = &$config;
-
-            foreach ($keys as $nestKey) {
-                if (!isset($configRef[$nestKey]) || !is_array($configRef[$nestKey])) {
-                    $configRef[$nestKey] = [];
-                }
-                $configRef = &$configRef[$nestKey];
-            }
-
-            $configRef[$lastKey] = $value;
-
-            // Écrire le contenu mis à jour dans le fichier
-            $content = '<?php return ' . var_export($config, true) . ';';
-            file_put_contents($configPath, $content);
-        }
-    }
-
-    /**
      * Met à jour les préférences de l'application
      *
      * @param  \Illuminate\Http\Request  $request
@@ -270,5 +303,55 @@ class SettingsController extends Controller
         $user->save();
 
         return redirect()->route('admin.settings.index')->with('success', 'Préférences mises à jour avec succès.');
+    }
+
+    /**
+     * Met à jour les paramètres SEO spécifiques à une page
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $page
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateSeoPage(Request $request, $page)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        try {
+            // Vérifier que la page est valide
+            $validPages = ['home', 'contact', 'offres', 'client', 'portfolio'];
+            if (!in_array($page, $validPages)) {
+                return back()->withErrors(['error' => 'Page invalide.']);
+            }
+
+            // Déterminer l'URL de la page
+            $url = match ($page) {
+                'home' => '/',
+                'offres' => '/NosOffres',
+                'contact' => '/Contact',
+                'client' => '/Client',
+                'portfolio' => '/Portfolio',
+                default => '/'
+            };
+
+            // Mettre à jour ou créer les données SEO pour la page
+            \RalphJSmit\Laravel\SEO\Models\SEO::updateOrCreate(
+                ['url' => $url],
+                [
+                    'title' => $validated['title'],
+                    'description' => $validated['description'],
+                    'author' => config('seo.author.fallback'),
+                    'robots' => config('seo.robots.default'),
+                    'canonical_url' => url($url)
+                ]
+            );
+
+            return redirect()->route('admin.settings.index')->with('success', 'Les paramètres SEO de la page ont été mis à jour avec succès.');
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la mise à jour des paramètres SEO de la page: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour des paramètres SEO de la page.'])->withInput();
+        }
     }
 }

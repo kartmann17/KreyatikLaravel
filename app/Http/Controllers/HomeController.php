@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 class HomeController extends Controller
 {
@@ -23,10 +24,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role === 'client') {
-            return redirect()->route('client.dashboard');
-        }
-        
-        return redirect()->route('admin.dashboard');
+        $seo = new SEOData(
+            title: 'Accueil',
+            description: 'Bienvenue sur Kréyatik Studio - Création de sites internet modernes et performants',
+            author: 'Kréyatik Studio',
+            robots: 'index, follow',
+            image: asset('images/logo.png'),
+        );
+
+        return view('welcome', [
+            'seo' => $seo,
+        ]);
     }
 }

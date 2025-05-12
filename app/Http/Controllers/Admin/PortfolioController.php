@@ -18,7 +18,7 @@ class PortfolioController extends Controller
     public function index()
     {
         $portfolioItems = PortfolioItem::orderBy('order', 'asc')->get();
-        
+
         return view('admin.portfolio.index', compact('portfolioItems'));
     }
 
@@ -42,19 +42,19 @@ class PortfolioController extends Controller
     {
         // Vérifier les permissions des dossiers de stockage
         $this->checkStorageFolders();
-        
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'technology' => 'nullable|string|max:255',
             'type' => 'required|in:image,video',
-            'file' => 'required|file|max:20480',
+            'file' => 'required|file',
         ]);
 
         // Vérification supplémentaire du format de fichier en fonction du type sélectionné
         $file = $request->file('file');
         $fileType = $validated['type'];
-        
+
         if (!$this->validateFileType($file, $fileType)) {
             return redirect()->back()
                 ->withInput()
@@ -63,7 +63,7 @@ class PortfolioController extends Controller
 
         // Gestion du fichier (image ou vidéo)
         $path = $this->handleFileUpload($file, $validated['type']);
-        
+
         // Vérifier si le téléchargement a réussi
         if (empty($path)) {
             // Journaliser l'erreur pour le débogage
@@ -72,7 +72,7 @@ class PortfolioController extends Controller
                 'size' => $file->getSize(),
                 'mime' => $file->getMimeType()
             ]);
-            
+
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['file' => 'Le téléchargement du fichier a échoué. Veuillez réessayer avec un fichier différent.']);
@@ -105,7 +105,7 @@ class PortfolioController extends Controller
     public function edit($id)
     {
         $portfolioItem = PortfolioItem::findOrFail($id);
-        
+
         return view('admin.portfolio.edit', compact('portfolioItem'));
     }
 
@@ -120,7 +120,7 @@ class PortfolioController extends Controller
     {
         // Vérifier les permissions des dossiers de stockage
         $this->checkStorageFolders();
-        
+
         $portfolioItem = PortfolioItem::findOrFail($id);
 
         $validated = $request->validate([
@@ -135,19 +135,19 @@ class PortfolioController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileType = $validated['type'];
-            
+
             if (!$this->validateFileType($file, $fileType)) {
                 return redirect()->back()
                     ->withInput()
                     ->withErrors(['file' => 'Le format du fichier ne correspond pas au type sélectionné.']);
             }
-            
+
             // Supprimer l'ancien fichier
             $this->deleteFile($portfolioItem->path);
-            
+
             // Télécharger le nouveau fichier
             $path = $this->handleFileUpload($file, $validated['type']);
-            
+
             // Vérifier si le téléchargement a réussi
             if (empty($path)) {
                 // Journaliser l'erreur pour le débogage
@@ -157,12 +157,12 @@ class PortfolioController extends Controller
                     'size' => $file->getSize(),
                     'mime' => $file->getMimeType()
                 ]);
-                
+
                 return redirect()->back()
                     ->withInput()
                     ->withErrors(['file' => 'Le téléchargement du fichier a échoué. Veuillez réessayer avec un fichier différent.']);
             }
-            
+
             $portfolioItem->path = $path;
         }
 
@@ -172,7 +172,7 @@ class PortfolioController extends Controller
         $portfolioItem->technology = $validated['technology'];
         $portfolioItem->type = $validated['type'];
         $portfolioItem->is_visible = $request->has('is_visible') ? true : false;
-        
+
         $portfolioItem->save();
 
         return redirect()->route('admin.portfolio.index')
@@ -249,31 +249,31 @@ class PortfolioController extends Controller
             \Log::error('Aucun fichier fourni pour le téléchargement');
             return '';
         }
-        
+
         if (!$file->isValid()) {
             \Log::error('Fichier invalide: ' . $file->getErrorMessage());
             return '';
         }
-        
+
         try {
             // Préparation des chemins et noms de fichiers
             $folder = $type === 'image' ? 'images/portfolio' : 'videos/portfolio';
             $fileName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            
+
             // Méthode entièrement manuelle - ne pas utiliser le système de fichiers de Laravel
-            
+
             // Créer le dossier s'il n'existe pas
             $publicPath = public_path('storage/' . $folder);
             if (!file_exists($publicPath)) {
                 mkdir($publicPath, 0755, true);
             }
-            
+
             // Déplacer le fichier directement
             $uploadSuccess = move_uploaded_file(
                 $file->getPathname(),
                 $publicPath . '/' . $fileName
             );
-            
+
             if (!$uploadSuccess) {
                 \Log::error('Échec du déplacement du fichier téléchargé', [
                     'source' => $file->getPathname(),
@@ -281,7 +281,7 @@ class PortfolioController extends Controller
                 ]);
                 return '';
             }
-            
+
             return "storage/{$folder}/{$fileName}";
         } catch (\Exception $e) {
             \Log::error('Exception lors du téléchargement du fichier: ' . $e->getMessage(), [
@@ -304,10 +304,10 @@ class PortfolioController extends Controller
         if (empty($path)) {
             return false;
         }
-        
+
         // Convertir le chemin public en chemin de stockage
         $storagePath = str_replace('storage/', 'public/', $path);
-        
+
         return Storage::exists($storagePath) ? Storage::delete($storagePath) : false;
     }
 
@@ -323,15 +323,15 @@ class PortfolioController extends Controller
         if (!$file || !$file->isValid()) {
             return false;
         }
-        
+
         // Récupérer le type MIME et l'extension
         $mime = $file->getMimeType();
         $extension = strtolower($file->getClientOriginalExtension());
-        
+
         // Liste d'extensions acceptables
         $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
         $videoExtensions = ['mp4', 'webm', 'avi', 'mov', 'mpeg', 'mpg', '3gp'];
-        
+
         if ($type === 'image') {
             // Validation permissive - accepter sur la base du MIME OU de l'extension
             return str_starts_with($mime, 'image/') || in_array($extension, $imageExtensions);
@@ -339,7 +339,7 @@ class PortfolioController extends Controller
             // Validation permissive - accepter sur la base du MIME OU de l'extension
             return str_starts_with($mime, 'video/') || in_array($extension, $videoExtensions);
         }
-        
+
         return false;
     }
 
@@ -355,13 +355,13 @@ class PortfolioController extends Controller
             public_path('storage/images/portfolio'),
             public_path('storage/videos/portfolio')
         ];
-        
+
         foreach ($paths as $path) {
             if (!file_exists($path)) {
                 \Log::info("Création du dossier manquant: {$path}");
                 mkdir($path, 0755, true);
             }
-            
+
             // Vérifier les permissions
             if (!is_writable($path)) {
                 chmod($path, 0755);
