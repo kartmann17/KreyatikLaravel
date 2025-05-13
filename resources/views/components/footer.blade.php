@@ -13,12 +13,12 @@
                 <ul class="space-y-1 text-center md:text-left text-sm">
                     <li><a href="/" class="hover:text-primary transition">Accueil</a></li>
                     <li><a href="/Contact" class="hover:text-primary transition">Contact</a></li>
-                    <li><a href="#" class="hover:text-primary transition">Plan du site</a></li>
+                    <li><a href="/Plandusite" class="hover:text-primary transition">Plan du site</a></li>
                 </ul>
                 <ul class="space-y-1 text-center md:text-left text-sm">
-                    <li><a href="#" class="hover:text-primary transition">Nos Offres</a></li>
-                    <li><a href="#" class="hover:text-primary transition">Portfolio</a></li>
-                    <li><a href="#" class="hover:text-primary transition">Mentions légales</a></li>
+                    <li><a href="/NosOffres" class="hover:text-primary transition">Nos Offres</a></li>
+                    <li><a href="/Portfolio" class="hover:text-primary transition">Portfolio</a></li>
+                    <li><a href="/MentionLegal" class="hover:text-primary transition">Mentions légales</a></li>
                 </ul>
             </div>
             <!-- Bloc 3 : Réseaux sociaux -->
