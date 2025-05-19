@@ -1,10 +1,4 @@
 /* ========== MEDIA QUERIES (Responsive First) ========== */
-@media (max-width: 768px) {
-    .pricing-cards {
-        flex-direction: column;
-        align-items: center;
-    }
-}
 
 /* ========== STRUCTURE & STYLES ========== */
 .pricing-section {
@@ -150,7 +144,7 @@
     background-color: #FFD700;
     color: #000;
     font-weight: bold;
-    padding: 5px 15px;
+    padding: 5px 10px;
     border-radius: 50px;
     font-size: 0.9rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);

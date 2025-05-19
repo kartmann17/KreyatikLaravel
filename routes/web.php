@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Response;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -39,22 +40,27 @@ use App\Http\Controllers\Admin\ProfileController;
 // Page d'accueil
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 //Page Mention Légale
 Route::get('/MentionLegal', function () {
     return view('MentionLegal.index');
+})->name('mentionslegales');
+
+//Plan du site
+Route::get('/plandusite', function () {
+    return view('plandusite.index');
 });
 
 //Page CGV
 Route::get('/CGV', function () {
     return view('CGV.index');
-});
+})->name('CGV');
 
 //Page confidentialité
-Route::get('/confidentialité', function () {
+Route::get('/confidentialite', function () {
     return view('confidentialite.index');
-});
+})->name('confidentialite');
 
 
 // Pages statiques
@@ -274,7 +280,6 @@ Route::middleware(['auth', 'role:admin,staff'])->prefix('admin')->group(function
         Route::put('/update', [SettingsController::class, 'updateAccount'])->name('update');
         Route::put('/seo', [SettingsController::class, 'updateSeo'])->name('seo');
         Route::put('/seo/page/{page}', [SettingsController::class, 'updatePageSeo'])->name('seo.page');
-        Route::put('/preferences', [SettingsController::class, 'updatePreferences'])->name('preferences');
     });
 
     /*
@@ -376,3 +381,14 @@ Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->g
         Route::get('/attachment/{id}', [App\Http\Controllers\Client\TicketController::class, 'downloadAttachment'])->name('attachment.download');
     });
 });
+
+/*
+    |--------------------------------------------------------------------------
+    | SiteMap
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/sitemap.xml', function () {
+        return Response::file(public_path('sitemap.xml'), [
+            'Content-Type' => 'application/xml',
+        ]);
+    });

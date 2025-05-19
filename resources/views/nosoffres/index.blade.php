@@ -5,17 +5,17 @@
         <h2 class="section-title">Choisissez votre plan</h2>
         <p class="section-subtitle">Des formules pensées pour accompagner votre croissance digitale.</p>
 
-        <div class="pricing-cards mt-4">
+        <div class="pricing-cards mt-4 ">
             @forelse($pricingPlans as $plan)
-            <div class="pricing-card {{ $plan->is_highlighted ? 'highlighted' : '' }}" 
-                 data-plan="{{ $plan->name }}" 
-                 data-price="{{ $plan->is_custom_plan ? $plan->monthly_price : $plan->monthly_price . '€/mois' }}" 
+            <div class="pricing-card {{ $plan->is_highlighted ? 'highlighted' : '' }}"
+                 data-plan="{{ $plan->name }}"
+                 data-price="{{ $plan->is_custom_plan ? $plan->monthly_price : $plan->monthly_price . '€/mois' }}"
                  data-full="{{ $plan->is_custom_plan ? $plan->annual_price : $plan->annual_price . '€' }}">
-                
+
                 @if($plan->is_highlighted && $plan->highlight_text)
                 <div class="badge">{{ $plan->highlight_text }}</div>
                 @endif
-                
+
                 <h3 class="plan-title">{{ $plan->name }}</h3>
                 <p class="starting-text font-bold">{{ $plan->starting_text }}</p>
                 <p class="price">{{ $plan->is_custom_plan ? $plan->monthly_price : $plan->monthly_price . '€/mois' }}</p>
@@ -98,20 +98,20 @@
         const planName = card.getAttribute('data-plan');
         const planPrice = card.getAttribute('data-price');
         const planFull = card.getAttribute('data-full');
-        
+
         // Mettre à jour les champs du formulaire
         document.getElementById('inputPlan').value = planName;
         document.getElementById('inputPrice').value = planPrice;
         document.getElementById('inputFull').value = planFull;
-        
+
         // Mettre à jour le titre du modal
-        document.getElementById('modal-title').textContent = planName === 'Site sur mesure' ? 
+        document.getElementById('modal-title').textContent = planName === 'Site sur mesure' ?
             'Demander un devis' : `Souscrire à l'offre ${planName}`;
-        
+
         // Afficher le modal
         const modal = document.querySelector('.modal-overlay');
         modal.classList.add('active');
-        
+
         // Focus sur le premier champ du formulaire
         if (document.getElementById('input-name')) {
             document.getElementById('input-name').focus();
@@ -122,7 +122,7 @@
         // Masquer le modal
         const modal = document.querySelector('.modal-overlay');
         modal.classList.remove('active');
-        
+
         // Réinitialiser le formulaire après un court délai
         setTimeout(() => {
             if (document.getElementById('offerForm')) {
@@ -130,19 +130,19 @@
             }
         }, 300);
     }
-    
+
     // Fermer le modal lorsqu'on clique en dehors
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.querySelector('.modal-overlay');
         const modalContent = document.querySelector('.modal-content');
-        
+
         if (modal && modalContent) {
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeForm();
                 }
             });
-            
+
             // Fermer le modal avec la touche Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && modal.classList.contains('active')) {

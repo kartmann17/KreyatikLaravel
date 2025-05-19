@@ -11,20 +11,22 @@ class NosOffresController extends Controller
 {
     public function index()
     {
-        $SEOData = new SEOData(
-            title: 'Nos Offres | Votre Entreprise',
-            description: 'Découvrez nos offres et tarifs adaptés à vos besoins. Solutions sur mesure pour tous vos projets.',
-            url: url()->current(),
-            image: asset('images/logo.png'),
-            locale: 'fr_FR',
-            site_name: config('app.name'),
-        );
-
         // Récupération des plans tarifaires actifs, triés par ordre
         $pricingPlans = PricingPlan::where('is_active', true)
             ->orderBy('order')
             ->get();
 
-        return view('nosoffres.index', compact('SEOData', 'pricingPlans'));
+        $seo = new SEOData(
+            title: 'Nos Offres',
+            description: 'Découvrez nos offres et tarifs adaptés à vos besoins. Solutions sur mesure pour tous vos projets.',
+            author: 'Kréyatik Studio',
+            robots: 'index, follow',
+            image: asset('images/logo.png'),
+        );
+
+        return view('nosoffres.index', [
+            'pricingPlans' => $pricingPlans,
+            'seo' => $seo,
+        ]);
     }
-} 
+}

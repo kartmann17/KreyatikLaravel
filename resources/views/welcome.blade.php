@@ -1,4 +1,4 @@
-<x-header title="Home" />
+<x-header />
 <main class="site-content">
   <section class="hero">
     <div class="hero-content">
@@ -7,7 +7,7 @@
         <div class="word" id="word-studio"></div>
       </h1>
       <p>Votre lumière mérite d'être en ligne.</p>
-      <p>Faites décoller votre présence en ligne dès <span class="font-bold">49 € / mois.</span> Design, performance et accompagnement inclus.</p>
+      <p>Faites décoller votre présence en ligne dès <span class="font-bold">249 € / mois.</span> Design, performance et accompagnement inclus.</p>
       <a href="#engagements" class="cta-button ">Nos Engagements</a>
     </div>
   </section>

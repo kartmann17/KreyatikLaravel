@@ -8,6 +8,7 @@ use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 class ContactController extends Controller
 {
@@ -20,8 +21,16 @@ class ContactController extends Controller
 
     public function index()
     {
-        $seoData = $this->seo->getData();
-        return view('contact.index', compact('seoData'));
+
+        $seo = new SEOData(
+            title: 'Nos Offres',
+            description: 'Découvrez nos offres et tarifs adaptés à vos besoins. Solutions sur mesure pour tous vos projets.',
+            author: 'Kréyatik Studio',
+            robots: 'index, follow',
+            image: asset('images/logo.png'),
+        );
+
+        return view('contact.index', ['seo' => $seo,]);
     }
 
     /**

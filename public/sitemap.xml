@@ -9,53 +9,75 @@
 
 <url>
   <loc>https://www.kreyatikstudio.fr/</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/NosOffres</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/Portfolio</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/Contact</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.kreyatikstudio.fr/plandusite</loc>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/login</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.50</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/register</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.50</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/MentionLegal</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.30</priority>
+</url>
+<url>
+  <loc>https://www.kreyatikstudio.fr/confidentialite</loc>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.30</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/CGV</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.30</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/ConditionTarifaire</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://www.kreyatikstudio.fr/password/reset</loc>
-  <lastmod>2025-05-07T10:37:47+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2024-03-19T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.40</priority>
 </url>
 
 

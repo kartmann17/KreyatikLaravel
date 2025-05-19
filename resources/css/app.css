@@ -5,6 +5,8 @@
 @import './main.css';
 @import './nosoffres.css';
 @import './portfolio.css';
+@import './confidentialite.css';
+@import './mentionlegal.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

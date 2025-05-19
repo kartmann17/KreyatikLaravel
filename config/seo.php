@@ -1,181 +1,60 @@
 <?php
 
-use RalphJSmit\Laravel\SEO\Models\SEO;
-
 return [
-    /**
-     * The SEO model. You can use this setting to override the model used by the package.
-     * Make sure to always extend the old model, so that you'll not lose functionality during upgrades.
-     */
-    'model' => SEO::class,
-
-    /**
-     * Use this setting to specify the site name that will be used in OpenGraph tags.
-     */
-    'site_name' => 'Kréyatik Studio - Création de sites internet modernes et performants',
-
-    /**
-     * Use this setting to specify the path to the sitemap of your website. This exact path will outputted, so
-     * you can use both a hardcoded url and a relative path. We recommend the latter.
-     *
-     * Example: '/storage/sitemap.xml'
-     * Do not forget the slash at the start. This will tell the search engine that the path is relative
-     * to the root domain and not relative to the current URL. The `spatie/laravel-sitemap` package
-     * is a great package to generate sitemaps for your application.
-     */
-    'sitemap' => '/sitemap.xml',
-
-    /**
-     * Use this setting to specify whether you want self-referencing `<link rel="canonical" href="$url">` tags to
-     * be added to the head of every page. There has been some debate whether this a good practice, but experts
-     * from Google and Yoast say that this is the best strategy.
-     * See https://yoast.com/rel-canonical/.
-     */
-    'canonical_link' => true,
-
-    'robots' => [
-        /**
-         * Use this setting to specify the default value of the robots meta tag. `<meta name="robots" content="noindex">`
-         * Overwrite it with the robots attribute of the SEOData object. `SEOData->robots = 'noindex, nofollow'`
-         * "max-snippet:-1" Use n chars (-1: Search engine chooses) as a search result snippet.
-         * "max-image-preview:large" Max size of a preview in search results.
-         * "max-video-preview:-1" Use max seconds (-1: There is no limit) as a video snippet in search results.
-         * See https://developers.google.com/search/docs/advanced/robots/robots_meta_tag
-         * Default: 'max-snippet:-1, max-image-preview:large, max-video-preview:-1'
-         */
-        'default' => 'max-snippet:-1,max-image-preview:large,max-video-preview:-1',
-
-        /**
-         * Force set the robots `default` value and make it impossible to overwrite it. (e.g. via SEOData->robots)
-         * Use case: You need to set `noindex, nofollow` for the entire website without exception.
-         * Default: false
-         */
-        'force_default' => false,
+  'model' => 'RalphJSmit\\Laravel\\SEO\\Models\\SEO',
+  'site_name' => env('APP_NAME', 'Kréyatik Studio'),
+  'sitemap' => '/sitemap.xml',
+  'canonical_link' => true,
+  'robots' => [
+    'default' => 'max-snippet:-1,max-image-preview:large,max-video-preview:-1',
+    'force_default' => false,
+  ],
+  'favicon' => 'favicon.ico',
+  'title' => [
+    'infer_title_from_url' => true,
+    'suffix' => ' | Kréyatik Studio',
+    'homepage_title' => 'Kréyatik Studio - Création de sites internet modernes et performants',
+  ],
+  'description' => [
+    'fallback' => 'Création de sites internet modernes et performants. Solutions sur mesure pour tous vos projets digitaux.',
+  ],
+  'image' => [
+    'fallback' => null,
+  ],
+  'author' => [
+    'fallback' => 'Kréyatik Studio',
+  ],
+  'twitter' => [
+    '@username' => null,
+  ],
+  'default_description' => null,
+  'default_keywords' => null,
+  'default_image' => null,
+  'locale' => 'fr_FR',
+  'social_facebook' => null,
+  'social_twitter' => null,
+  'social_instagram' => null,
+  'social_linkedin' => null,
+  'pages' => [
+    'home' => [
+      'title' => 'Accueil | Kréyatik Studio',
+      'description' => 'Bienvenue sur Kréyatik Studio - Création de sites internet modernes et performants',
     ],
-
-    /**
-     * Use this setting to specify the path to the favicon for your website. The url to it will be generated using the `secure_url()` function,
-     * so make sure to make the favicon accessibly from the `public` folder.
-     *
-     * You can use the following filetypes: ico, png, gif, jpeg, svg.
-     */
-    'favicon' => 'favicon.ico',
-
-    'title' => [
-        /**
-         * Use this setting to let the package automatically infer a title from the url, if no other title
-         * was given. This will be very useful on pages where you don't have an Eloquent model for, or where you
-         * don't want to hardcode the title.
-         *
-         * For example, if you have a page with the url '/foo/about-me', we'll automatically set the title to 'About me' and append the site suffix.
-         */
-        'infer_title_from_url' => true,
-
-        /**
-         * Use this setting to provide a suffix that will be added after the title on each page.
-         * If you don't want a suffix, you should specify an empty string.
-         */
-        'suffix' => ' | Kréyatik Studio',
-
-        /**
-         * Use this setting to provide a custom title for the homepage. We will not use the suffix on the homepage,
-         * so you'll need to add the suffix manually if you want that. If set to null, we'll determine the title
-         * just like the other pages.
-         */
-        'homepage_title' => 'Kréyatik Studio - Création de sites internet modernes et performants',
+    'contact' => [
+      'title' => 'Contactez-nous | Kréyatik Studio',
+      'description' => 'Prenez contact avec notre équipe pour discuter de vos projets ou obtenir plus d\'informations sur nos services.',
     ],
-
-    'description' => [
-        /**
-         * Use this setting to specify a fallback description, which will be used on places
-         * where we don't have a description set via an associated ->seo model or via
-         * the ->getDynamicSEOData() method.
-         */
-        'fallback' => 'Kréyatik Studio conçoit des sites internet modernes, responsives et performants pour les professionnels, créateurs et entrepreneurs. Site vitrine ou e-commerce 100% sécurisé, design sur mesure, optimisation SEO et accompagnement complet dès 99€/mois.',
+    'offres' => [
+      'title' => 'Nos Offres | Kréyatik Studio',
+      'description' => 'Découvrez nos offres et tarifs adaptés à vos besoins. Solutions sur mesure pour tous vos projets.',
     ],
-
-    'image' => [
-        /**
-         * Use this setting to specify a fallback image, which will be used on places where you
-         * don't have an image set via an associated ->seo model or via the ->getDynamicSEOData() method.
-         * This should be a path to an image. The url to the path is generated using the `secure_url()` function
-         * (`secure_url($yourProvidedPath)`), so make sure the image is accessible from the public folder.
-         */
-        'fallback' => null,
+    'portfolio' => [
+      'title' => 'Notre Portfolio  | Kréyatik Studio',
+      'description' => 'Découvrez notre portfolio créatif, présentant une sélection de projets uniques en design web, développement et branding, réalisés pour des clients dans divers secteurs d\'activité.',
     ],
-
-    'author' => [
-        /**
-         * Use this setting to specify a fallback author, which will be used on places where you
-         * don't have an author set via an associated ->seo model or via the ->getDynamicSEOData() method.
-         */
-        'fallback' => null,
+    'client' => [
+      'title' => 'Espace Client | Kréyatik Studio',
+      'description' => 'Accédez à votre espace client pour gérer vos projets et suivre vos demandes en cours.',
     ],
-
-    'twitter' => [
-        /**
-         * Use this setting to enter your username and include that with the Twitter Card tags.
-         * Enter the username like 'yourUserName', so without the '@'.
-         */
-        '@username' => null,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Paramètres SEO par défaut
-    |--------------------------------------------------------------------------
-    |
-    | Ces valeurs sont utilisées lorsqu'aucune valeur spécifique n'est fournie
-    | pour une page. Elles permettent d'assurer une base cohérente pour toutes
-    | les pages du site.
-    |
-    */
-
-    'default_description' => 'Application de gestion de projets et de suivi du temps',
-    'default_keywords' => 'gestion de projets, suivi du temps, clients, tâches',
-    'default_image' => 'images/default-og-image.png',
-    'locale' => 'fr_FR',
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Réseaux sociaux
-    |--------------------------------------------------------------------------
-    |
-    | URLs des profils de réseaux sociaux pour l'organisation
-    |
-    */
-    
-    'social_facebook' => null,
-    'social_twitter' => null,
-    'social_instagram' => null,
-    'social_linkedin' => null,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Paramètres SEO par page
-    |--------------------------------------------------------------------------
-    |
-    | Configurations spécifiques pour chaque page principale du site
-    |
-    */
-
-    'pages' => [
-        'home' => [
-            'title' => 'Accueil | Votre Entreprise',
-            'description' => 'Bienvenue sur notre application de gestion de projets et de suivi du temps',
-        ],
-        'contact' => [
-            'title' => 'Contactez-nous | Votre Entreprise',
-            'description' => 'Prenez contact avec notre équipe pour discuter de vos projets ou obtenir plus d\'informations sur nos services.',
-        ],
-        'offres' => [
-            'title' => 'Nos Offres | Votre Entreprise',
-            'description' => 'Découvrez nos offres et tarifs adaptés à vos besoins. Solutions sur mesure pour tous vos projets.',
-        ],
-        'client' => [
-            'title' => 'Espace Client | Votre Entreprise',
-            'description' => 'Accédez à votre espace client pour gérer vos projets et suivre vos demandes en cours.',
-        ],
-    ],
-
+  ],
 ];

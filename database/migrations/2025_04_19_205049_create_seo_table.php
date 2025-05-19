@@ -13,6 +13,8 @@ return new class extends Migration
 
             $table->morphs('model');
 
+            $table->string('url')->nullable()->index();
+
             $table->longText('description')->nullable();
             $table->string('title')->nullable();
             $table->string('image')->nullable();
